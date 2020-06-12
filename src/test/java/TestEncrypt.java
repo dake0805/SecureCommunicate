@@ -1,9 +1,16 @@
+import encrypt.des.DES;
 import encrypt.rsa.RSA;
 import org.junit.Test;
 
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+
+import static utils.Utils.binToUTF;
 import static utils.Utils.bytesToString;
 
-public class TestRSA {
+public class TestEncrypt {
+    PrintWriter printWriter = new PrintWriter(System.out);
+
     @Test
     public void testRSA() {
         RSA rsa = new RSA();
@@ -21,5 +28,19 @@ public class TestRSA {
         byte[] decrypted = rsa.decrypt(encrypted);
         System.out.println("Decrypting Bytes: " + bytesToString(decrypted));
         System.out.println("Decrypted String: " + new String(decrypted));
+    }
+
+    @Test
+    public void testDES() {
+        DES des = new DES();
+        String key1 = "12341", message = "helloworld", result = null;
+
+        result = des.encrypt(key1, message);
+        System.out.println(result);
+
+        result = des.decrypt(key1, result);
+
+        System.out.println(binToUTF(result));
+
     }
 }
