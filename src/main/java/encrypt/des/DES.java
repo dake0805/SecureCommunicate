@@ -1,5 +1,7 @@
 package encrypt.des;
 
+import utils.Utils;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +10,8 @@ import java.util.Arrays;
 public class DES {
 
     public static int KEY_LENGTH = 64;
+
+    private String key;
 
     private static int[] PC1 =
             {
@@ -153,7 +157,9 @@ public class DES {
 
         // First index is garbage value, loops operating on this should start with index = 1
         K = new long[17];
-
+        //todo bugs
+        key = Utils.generateDesKey();
+        System.err.println(key);
     }
 
     private static String binToHex(String bin) {
@@ -216,7 +222,7 @@ public class DES {
      * @param plaintext
      * @return
      */
-    public String encrypt(String key, String plaintext) {
+    public String encrypt(String plaintext) {
 
         plaintext = utfToBin(plaintext);
 
@@ -272,7 +278,7 @@ public class DES {
      * @param hexCipherText : String - Hex string to decrypt
      * @return Plaintext message string
      */
-    public String decrypt(String key, String hexCipherText) {
+    public String decrypt(String hexCipherText) {
 
         // Build the key schedule
         buildKeySchedule(hash(key));

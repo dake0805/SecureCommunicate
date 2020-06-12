@@ -12,7 +12,7 @@ public class PublicKey implements Serializable {
         this.e = e;
     }
 
-    protected byte[] encrypt(byte[] message) {
+    public byte[] encrypt(byte[] message) {
         return (new BigInteger(message)).modPow(e, n).toByteArray();
     }
 

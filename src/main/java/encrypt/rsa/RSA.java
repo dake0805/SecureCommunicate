@@ -19,6 +19,10 @@ public class RSA {
         this.generateKey();
     }
 
+    public RSA(PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
+
     private void generateKey() {
         Random r = new Random();
         BigInteger p = BigInteger.probablePrime(bitLength, r);
@@ -36,15 +40,15 @@ public class RSA {
         this.privateKey = new PrivateKey(n, d);
     }
 
-    public static void main(String[] args) throws IOException {
-        while (true) {
-            new RSA();
-        }
-    }
+//    public static void main(String[] args) throws IOException {
+//        while (true) {
+//            new RSA();
+//        }
+//    }
 
-    public byte[] encrypt(byte[] message) {
-        return publicKey.encrypt(message);
-    }
+//    public byte[] encrypt(byte[] message) {
+//        return publicKey.encrypt(message);
+//    }
 
     public byte[] decrypt(byte[] message) {
         return privateKey.decrypt(message);
@@ -53,4 +57,10 @@ public class RSA {
     public PublicKey getPublicKey() {
         return publicKey;
     }
+
+    public PrivateKey getPrivateKey() {
+        return privateKey;
+    }
+
+
 }

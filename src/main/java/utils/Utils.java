@@ -1,6 +1,11 @@
 package utils;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 public class Utils {
     public static String bytesToString(byte[] bytes) {
@@ -31,5 +36,9 @@ public class Utils {
         }
 
         return ciphertext.trim();
+    }
+
+    public static String generateDesKey() {
+        return RandomStringUtils.randomAscii(8);
     }
 }

@@ -1,16 +1,14 @@
 import encrypt.des.DES;
+import encrypt.rsa.PublicKey;
 import encrypt.rsa.RSA;
 import org.junit.Test;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-import static utils.Utils.binToUTF;
-import static utils.Utils.bytesToString;
+import static utils.Utils.*;
 
 public class TestEncrypt {
-    PrintWriter printWriter = new PrintWriter(System.out);
-
     @Test
     public void testRSA() {
         RSA rsa = new RSA();
@@ -19,8 +17,9 @@ public class TestEncrypt {
         System.out.println("String in Bytes: "
                 + bytesToString(testStr.getBytes()));
         System.out.println("public key is: ");
-        System.out.println(rsa.getPublicKey());
-        byte[] encrypted = rsa.encrypt(testStr.getBytes());
+        PublicKey publicKey = rsa.getPublicKey();
+        System.out.println(publicKey);
+        byte[] encrypted = publicKey.encrypt(testStr.getBytes());
 
         System.out.println("encrypted data is: ");
         System.out.println(bytesToString(encrypted));
@@ -33,12 +32,12 @@ public class TestEncrypt {
     @Test
     public void testDES() {
         DES des = new DES();
-        String key1 = "12341", message = "helloworld", result = null;
+        String key = "123213213", message = "helloworld", result = null;
 
-        result = des.encrypt(key1, message);
+        result = des.encrypt(message);
         System.out.println(result);
 
-        result = des.decrypt(key1, result);
+        result = des.decrypt(result);
 
         System.out.println(binToUTF(result));
 
