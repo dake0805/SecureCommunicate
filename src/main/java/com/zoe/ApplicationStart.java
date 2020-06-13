@@ -9,6 +9,7 @@ import com.zoe.server.Server;
  */
 public class ApplicationStart {
     public static void main(String[] args) {
+        System.out.println(System.getProperty("file.encoding"));
         int port = 3456;
         Options options = new Options();
         options.addOption("h", true, "listen port");
