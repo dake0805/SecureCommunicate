@@ -11,7 +11,7 @@ public class DES {
 
     public static int KEY_LENGTH = 64;
 
-    private String key;
+    private final String key;
 
     private static int[] PC1 =
             {
