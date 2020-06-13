@@ -48,8 +48,8 @@ public class Utils {
         return ciphertext.trim();
     }
 
-    public static String generateDesKey() {
-        return RandomStringUtils.randomAscii(8);
+    public static String generateDesKey(int n) {
+        return RandomStringUtils.randomAscii(n);
     }
 
     public static String ObjectToJson(Object o) {

@@ -1,18 +1,13 @@
 package server;
 
 import com.google.gson.Gson;
-import encrypt.ObjectDecrypt;
-import encrypt.ObjectEncrypt;
-import encrypt.des.DES;
+import encrypt.MessageDecrypt;
+import encrypt.MessageEncrypt;
 import encrypt.rsa.PublicKey;
-import message.Message;
 import utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
-
-import static java.lang.System.out;
 
 
 class ServerListener implements Runnable {
@@ -20,14 +15,14 @@ class ServerListener implements Runnable {
     private final Socket client;
     private BufferedReader bufferedReader;
     private PrintWriter currentClientWriter;
-    private ObjectEncrypt objectEncrypt;
-    private ObjectDecrypt objectDecrypt;
+    private MessageEncrypt messageEncrypt;
+    private MessageDecrypt messageDecrypt;
 
 
-    public ServerListener(Socket socket, ObjectEncrypt objectEncrypt, ObjectDecrypt objectDecrypt) {
+    public ServerListener(Socket socket, MessageEncrypt messageEncrypt, MessageDecrypt messageDecrypt) {
         this.client = socket;
-        this.objectDecrypt = objectDecrypt;
-        this.objectEncrypt = objectEncrypt;
+        this.messageDecrypt = messageDecrypt;
+        this.messageEncrypt = messageEncrypt;
     }
 
     @Override

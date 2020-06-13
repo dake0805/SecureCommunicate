@@ -1,7 +1,9 @@
 import com.google.gson.Gson;
+import encrypt.MessageDecrypt;
+import encrypt.MessageEncrypt;
 import encrypt.des.DES;
-import encrypt.rsa.PublicKey;
 import encrypt.rsa.RSA;
+import message.Message;
 import org.junit.Test;
 
 import static utils.Utils.*;
@@ -31,14 +33,17 @@ public class TestEncrypt {
     public void rsa2() {
         RSA rsa = new RSA();
         var encrypted = bytes2Base64String(rsa.getPublicKey().encrypt("1234".getBytes()));
-        var decrypted = new String( rsa.getPrivateKey().decrypt(base64String2Bytes(encrypted)));
+        var decrypted = new String(rsa.getPrivateKey().decrypt(base64String2Bytes(encrypted)));
         System.out.println(encrypted);
         System.out.println(decrypted);
     }
 
     @Test
     public void gson() {
-        System.out.println(new Gson().toJson("1234"));
+        MessageEncrypt messageEncrypt = new MessageEncrypt(new DES());
+        var e = messageEncrypt.aes(new Message("111", "111111"));
+        var d = new MessageDecrypt(messageEncrypt.getDes()).aes(e);
+        System.out.println(d);
     }
 
     @Test
@@ -51,7 +56,7 @@ public class TestEncrypt {
 
         result = des.decrypt(result);
 
-        System.out.println(binToUtf(result));
+        System.out.println(result);
 
     }
 }

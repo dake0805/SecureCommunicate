@@ -1,9 +1,10 @@
 package client;
 
-import encrypt.ObjectDecrypt;
-import encrypt.ObjectEncrypt;
+import encrypt.MessageDecrypt;
+import encrypt.MessageEncrypt;
 import encrypt.des.DES;
 import encrypt.rsa.RSA;
+import message.Message;
 import utils.Utils;
 
 import java.io.*;
@@ -11,7 +12,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
 
-import static java.lang.System.in;
 import static java.lang.System.out;
 
 /**
@@ -28,6 +28,8 @@ public class Client {
     private String desKey;
     private DES des;
 
+    private String account = "user";
+
 
     public void start(String host, int port) {
         try {
@@ -35,6 +37,8 @@ public class Client {
             initStream();
             out.println("connected: " + server.getLocalSocketAddress());
             initConnect();
+            out.println("input your username");
+            account = scanner.nextLine();
             new ReceiveMessageListener().start();
             new SendMessageListener().start();
         } catch (SocketException e) {
@@ -74,11 +78,11 @@ public class Client {
         @Override
         public void run() {
             try {
-                ObjectEncrypt objectEncrypt = new ObjectEncrypt(des);
+                MessageEncrypt messageEncrypt = new MessageEncrypt(des);
                 while (true) {
                     var input = scanner.nextLine();
                     if (input != null && input.length() > 0) {
-                        sendMsg(des.encrypt(objectEncrypt.des(input)));
+                        sendMsg(des.encrypt(messageEncrypt.aes(new Message(account, input))));
                     }
                 }
             } catch (SocketException e) {
@@ -96,11 +100,12 @@ public class Client {
         @Override
         public void run() {
             try {
-                ObjectDecrypt objectDecrypt = new ObjectDecrypt(des);
+                MessageDecrypt messageDecrypt = new MessageDecrypt(des);
                 while (true) {
                     var receive = receiveMsg();
                     if (receive != null && receive.length() > 0) {
-                        out.println(objectDecrypt.des(receive));
+                        Message decrypted = (Message) messageDecrypt.des(receive);
+                        out.println(decrypted.toString());
                     }
                 }
             } catch (SocketException e) {

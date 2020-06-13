@@ -1,9 +1,10 @@
 package server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import encrypt.ObjectDecrypt;
-import encrypt.ObjectEncrypt;
+import encrypt.MessageDecrypt;
+import encrypt.MessageEncrypt;
 import encrypt.des.DES;
+import utils.Utils;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -27,8 +28,8 @@ public class Server {
     public static final int THREAD_POOL_SIZE = 32;
     private ThreadPoolExecutor executor;
 
-    private ObjectDecrypt objectDecrypt;
-    private ObjectEncrypt objectEncrypt;
+    private MessageDecrypt messageDecrypt;
+    private MessageEncrypt messageEncrypt;
 
     public void start(int setPort) {
         port = setPort;
@@ -50,7 +51,7 @@ public class Server {
 
                 //接受publicKey
 
-                executor.execute(new ServerListener(client, objectEncrypt, objectDecrypt));
+                executor.execute(new ServerListener(client, messageEncrypt, messageDecrypt));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,9 +60,9 @@ public class Server {
 
     private void initEncrypt() {
         //TODO
-        DES des = new DES("1234");
-        objectEncrypt = new ObjectEncrypt(des);
-        objectDecrypt = new ObjectDecrypt(des);
+        DES des = new DES(Utils.generateDesKey(16).getBytes());
+        messageEncrypt = new MessageEncrypt(des);
+        messageDecrypt = new MessageDecrypt(des);
     }
 
     private void initThreadPool() {

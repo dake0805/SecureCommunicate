@@ -153,7 +153,7 @@ public class DES {
 
     private long[] K;
 
-    public DES() {
+    public DES(byte[] bytes) {
         // First index is garbage value, loops operating on this should start with index = 1
         K = new long[17];
         //todo bugs
@@ -329,7 +329,7 @@ public class DES {
         // Destroy key schedule
         Arrays.fill(K, 0);
 
-        return binCiphertext.toString();
+        return binToUTF(binCiphertext.toString()) ;
     }
 
     public String encryptBlock(String plaintextBlock) throws Exception {
