@@ -1,6 +1,10 @@
+import client.Client;
 import org.apache.commons.cli.*;
 import server.Server;
 
+/**
+ * @author zy
+ */
 public class ApplicationStart {
     public static void main(String[] args) throws ParseException {
         int port = 3456;
@@ -23,7 +27,9 @@ public class ApplicationStart {
                 new Server().start(port);
             }
             if (cmd.hasOption('c')) {
-                //client
+                var host = cmd.getOptionValue('c');
+                port = Integer.parseInt(cmd.getOptionValue('p'));
+                new Client().start(host, port);
             }
         }
     }

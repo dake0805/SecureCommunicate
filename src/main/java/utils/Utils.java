@@ -1,5 +1,7 @@
 package utils;
 
+import com.google.gson.Gson;
+import encrypt.ObjectEncrypt;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -37,5 +39,9 @@ public class Utils {
 
     public static String generateDesKey() {
         return RandomStringUtils.randomAscii(8);
+    }
+
+    public static String ObjectToJson(Object o) {
+        return new Gson().toJson(o);
     }
 }

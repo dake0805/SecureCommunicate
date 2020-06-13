@@ -1,9 +1,14 @@
 package client;
 
+import encrypt.rsa.RSA;
+import utils.Utils;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
+
+import static java.lang.System.out;
 
 /**
  * @author zy
@@ -14,21 +19,37 @@ public class Client {
 
     private PrintWriter printWriter;
     private BufferedReader bufferedReader;
+    private Scanner scanner;
 
-    private void start(String host, int port) {
+    private String desKey;
+
+
+    public void start(String host, int port) {
         try {
             initStream();
             // 连接服务器
             server = new Socket(host, port);
-            System.out.println("connected: " + server.getLocalSocketAddress());
-            // 启动接受消息的线程
+            out.println("connected: " + server.getLocalSocketAddress());
+            initConnect();
             new ReceiveMessageListener().start();
-            // 启动发送消息的线程
             new SendMessageListener().start();
         } catch (SocketException e) {
-            System.out.println("server error: " + server.getRemoteSocketAddress());
+            out.println("server error: " + server.getRemoteSocketAddress());
         } catch (IOException e) {
             // log
+        }
+    }
+
+    private void initConnect() throws IOException {
+        RSA rsa = new RSA();
+        sendMsg(Utils.ObjectToJson(rsa.getPublicKey()));
+        while (true) {
+            var msg = receiveMsg();
+            if (msg != null && msg.length() >= 1) {
+                desKey = new String(rsa.getPrivateKey().decrypt(msg.getBytes()));
+                out.println("encrypted to server now.");
+                break;
+            }
         }
     }
 
@@ -38,6 +59,7 @@ public class Client {
         InputStream inputStream = server.getInputStream();
         InputStreamReader isr = new InputStreamReader(inputStream);
         bufferedReader = new BufferedReader(isr);
+        scanner = new Scanner(System.in);
     }
 
     /**
@@ -47,14 +69,11 @@ public class Client {
         @Override
         public void run() {
             try {
-                // 监听idea的console输入
-                Scanner scanner = new Scanner(System.in);
-                // 循环处理，只要有输入内容就立即发送
                 while (true) {
-                    sendMsg(scanner.next());
+                    sendMsg(scanner.nextLine());
                 }
             } catch (SocketException e) {
-                System.out.println("服务器" + server.getRemoteSocketAddress() + "嗝屁了");
+                out.println("服务器" + server.getRemoteSocketAddress() + "嗝屁了");
             } catch (IOException e) {
                 // log
             }
@@ -70,10 +89,10 @@ public class Client {
             try {
                 // 循环监听，除非掉线，或者服务器宕机了
                 while (true) {
-                    System.out.println(receiveMsg());
+                    out.println(receiveMsg());
                 }
             } catch (SocketException e) {
-                System.out.println("服务器" + server.getRemoteSocketAddress() + "嗝屁了");
+                out.println("服务器" + server.getRemoteSocketAddress() + "嗝屁了");
             } catch (IOException e) {
                 // log
             }
@@ -87,14 +106,11 @@ public class Client {
      * @throws IOException
      */
     private void sendMsg(String msg) throws IOException {
-
         printWriter.println(msg);
-        // 这里需要特别注意，对方用readLine获取消息，就必须用print而不能用write，否则会导致消息获取不了
         printWriter.flush();
     }
 
     private String receiveMsg() throws IOException {
-
         return bufferedReader.readLine();
     }
 

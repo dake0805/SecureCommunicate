@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.List;
 
 
-class ServerListener extends Thread {
+class ServerListener implements Runnable {
 
     private final Socket client;
 
