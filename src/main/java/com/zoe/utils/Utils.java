@@ -1,4 +1,4 @@
-package utils;
+package com.zoe.utils;
 
 import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;

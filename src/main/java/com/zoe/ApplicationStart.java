@@ -1,21 +1,28 @@
-import client.Client;
+package com.zoe;
+
+import com.zoe.client.Client;
 import org.apache.commons.cli.*;
-import server.Server;
+import com.zoe.server.Server;
 
 /**
  * @author zy
  */
 public class ApplicationStart {
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
         int port = 3456;
         Options options = new Options();
         options.addOption("h", true, "listen port");
-        options.addOption("s", false, "start server");
-        options.addOption("p", true, "server listen port");
-        options.addOption("c", true, "start client to specific server");
+        options.addOption("s", false, "start com.zoe.server");
+        options.addOption("p", true, "com.zoe.server listen port");
+        options.addOption("c", true, "start com.zoe.client to specific com.zoe.server");
 
         CommandLineParser commandLineParser = new DefaultParser();
-        CommandLine cmd = commandLineParser.parse(options, args);
+        CommandLine cmd = null;
+        try {
+            cmd = commandLineParser.parse(options, args);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (cmd.hasOption('h')) {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp("Options", options);

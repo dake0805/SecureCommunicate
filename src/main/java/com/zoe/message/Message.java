@@ -1,5 +1,7 @@
-package message;
+package com.zoe.message;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class Message {
@@ -29,10 +31,12 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "account='" + account + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");
+        Date date = new Date();
+        return "\nMessage@" + sdf.format(date) + "\n" +
+                account + ": \n" +
+                message + "\n";
     }
 
     @Override

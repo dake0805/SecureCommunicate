@@ -1,7 +1,6 @@
-package encrypt.rsa;
+package com.zoe.encrypt.rsa;
 
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -46,12 +45,12 @@ public class RSA {
 //        }
 //    }
 
-//    public byte[] encrypt(byte[] message) {
-//        return publicKey.encrypt(message);
+//    public byte[] com.zoe.encrypt(byte[] com.zoe.message) {
+//        return publicKey.com.zoe.encrypt(com.zoe.message);
 //    }
 
-//    public byte[] decrypt(byte[] message) {
-//        return privateKey.decrypt(message);
+//    public byte[] decrypt(byte[] com.zoe.message) {
+//        return privateKey.decrypt(com.zoe.message);
 //    }
 
     public PublicKey getPublicKey() {

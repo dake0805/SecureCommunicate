@@ -1,6 +1,4 @@
-package server;
-
-import client.Client;
+package com.zoe.server;
 
 import java.net.Socket;
 import java.util.ArrayList;

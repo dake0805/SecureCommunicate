@@ -1,10 +1,10 @@
-package server;
+package com.zoe.server;
 
 import com.google.gson.Gson;
-import encrypt.MessageDecrypt;
-import encrypt.MessageEncrypt;
-import encrypt.rsa.PublicKey;
-import utils.Utils;
+import com.zoe.message.MessageDecrypt;
+import com.zoe.message.MessageEncrypt;
+import com.zoe.encrypt.rsa.PublicKey;
+import com.zoe.utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
@@ -44,7 +44,7 @@ class ServerListener implements Runnable {
             var msg = receiveData();
             if (msg != null && msg.length() >= 1) {
                 PublicKey publicKey = new Gson().fromJson(msg, PublicKey.class);
-                var deskey = Utils.bytes2Base64String(publicKey.encrypt("1234".getBytes()));
+                var deskey = Utils.bytes2Base64String(publicKey.encrypt(messageEncrypt.getKey().getBytes()));
                 //TODO
                 currentClientWriter.println(deskey);
                 currentClientWriter.flush();
@@ -61,9 +61,9 @@ class ServerListener implements Runnable {
 
     private void forwardData(String msg) throws IOException {
         for (Socket socket : ClientList.getClients()) {
-            if (socket.equals(client)) {
-                continue;
-            }
+//            if (socket.equals(com.zoe.client)) {
+//                continue;
+//            }
             var writer = new PrintWriter(socket.getOutputStream());
             writer.println(msg);
             writer.flush();

@@ -1,11 +1,10 @@
-package client;
+package com.zoe.client;
 
-import encrypt.MessageDecrypt;
-import encrypt.MessageEncrypt;
-import encrypt.des.DES;
-import encrypt.rsa.RSA;
-import message.Message;
-import utils.Utils;
+import com.zoe.message.MessageDecrypt;
+import com.zoe.message.MessageEncrypt;
+import com.zoe.encrypt.rsa.RSA;
+import com.zoe.message.Message;
+import com.zoe.utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
@@ -25,11 +24,11 @@ public class Client {
     private BufferedReader bufferedReader;
     private Scanner scanner;
 
-    private String desKey;
-    private DES des;
+    private String key;
 
     private String account = "user";
 
+    private static final String MODE = "aes";
 
     public void start(String host, int port) {
         try {
@@ -39,10 +38,11 @@ public class Client {
             initConnect();
             out.println("input your username");
             account = scanner.nextLine();
+            out.println("welcome, " + account);
             new ReceiveMessageListener().start();
             new SendMessageListener().start();
         } catch (SocketException e) {
-            out.println("server error: " + server.getRemoteSocketAddress());
+            out.println("com.zoe.server error: " + server.getRemoteSocketAddress());
         } catch (IOException e) {
             // log
         }
@@ -54,9 +54,9 @@ public class Client {
         while (true) {
             var msg = receiveMsg();
             if (msg != null && msg.length() >= 1) {
-                desKey = new String(rsa.getPrivateKey().decrypt(Utils.base64String2Bytes(msg)));
-                des = new DES(desKey);
-                out.println("encrypted to server now.");
+                key = new String(rsa.getPrivateKey().decrypt(Utils.base64String2Bytes(msg)));
+                //des = new DES(key);
+                out.println("encrypted to com.zoe.server now.");
                 break;
             }
         }
@@ -77,18 +77,12 @@ public class Client {
     class SendMessageListener extends Thread {
         @Override
         public void run() {
-            try {
-                MessageEncrypt messageEncrypt = new MessageEncrypt(des);
-                while (true) {
-                    var input = scanner.nextLine();
-                    if (input != null && input.length() > 0) {
-                        sendMsg(des.encrypt(messageEncrypt.aes(new Message(account, input))));
-                    }
+            MessageEncrypt messageEncrypt = new MessageEncrypt().mode(MODE, key);
+            while (true) {
+                var input = scanner.nextLine();
+                if (input != null && input.length() > 0) {
+                    sendMsg(messageEncrypt.encrypt(new Message(account, input)));
                 }
-            } catch (SocketException e) {
-                out.println("server error: " + server.getRemoteSocketAddress());
-            } catch (IOException e) {
-                // log
             }
         }
     }
@@ -100,23 +94,23 @@ public class Client {
         @Override
         public void run() {
             try {
-                MessageDecrypt messageDecrypt = new MessageDecrypt(des);
+                MessageDecrypt messageDecrypt = new MessageDecrypt().mode(MODE, key);
                 while (true) {
                     var receive = receiveMsg();
                     if (receive != null && receive.length() > 0) {
-                        Message decrypted = (Message) messageDecrypt.des(receive);
+                        Message decrypted = messageDecrypt.decrypt(receive);
                         out.println(decrypted.toString());
                     }
                 }
             } catch (SocketException e) {
-                out.println("server error" + server.getRemoteSocketAddress());
+                out.println("com.zoe.server error" + server.getRemoteSocketAddress());
             } catch (IOException e) {
                 // log
             }
         }
     }
 
-    private void sendMsg(String msg) throws IOException {
+    private void sendMsg(String msg) {
         printWriter.println(msg);
         printWriter.flush();
     }

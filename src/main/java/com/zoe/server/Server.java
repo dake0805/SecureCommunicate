@@ -1,10 +1,9 @@
-package server;
+package com.zoe.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import encrypt.MessageDecrypt;
-import encrypt.MessageEncrypt;
-import encrypt.des.DES;
-import utils.Utils;
+import com.zoe.message.MessageDecrypt;
+import com.zoe.message.MessageEncrypt;
+import com.zoe.utils.Utils;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -35,10 +34,10 @@ public class Server {
         port = setPort;
         initThreadPool();
         initEncrypt();
-        //start server
+        //start com.zoe.server
         try {
             ServerSocket server = new ServerSocket(port);
-            out.println("server on");
+            out.println("com.zoe.server on");
             //loop
             while (true) {
                 Socket client = null;
@@ -60,9 +59,9 @@ public class Server {
 
     private void initEncrypt() {
         //TODO
-        DES des = new DES(Utils.generateDesKey(16).getBytes());
-        messageEncrypt = new MessageEncrypt(des);
-        messageDecrypt = new MessageDecrypt(des);
+        // DES des = new DES(Utils.generateDesKey(16).getBytes());
+        messageEncrypt = new MessageEncrypt().mode("aes", Utils.generateDesKey(16));
+        messageDecrypt = new MessageDecrypt().mode("aes", Utils.generateDesKey(16));
     }
 
     private void initThreadPool() {
@@ -76,8 +75,8 @@ public class Server {
                 new ThreadPoolExecutor.AbortPolicy());
     }
 
-    public static void main(String[] args) {
-        new Server().start(3456);
-    }
+//    public static void main(String[] args) {
+//        new Server().start(3456);
+//    }
 
 }

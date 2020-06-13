@@ -1,4 +1,4 @@
-package encrypt.rsa;
+package com.zoe.encrypt.rsa;
 
 import java.io.Serializable;
 import java.math.BigInteger;
