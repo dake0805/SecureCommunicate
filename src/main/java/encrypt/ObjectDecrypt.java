@@ -29,4 +29,8 @@ public class ObjectDecrypt {
         return gson.fromJson(new String(privateKey.decrypt(encrypted.getBytes())), Object.class);
     }
 
+    public DES getDes() {
+        return des;
+    }
+
 }

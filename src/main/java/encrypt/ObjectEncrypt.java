@@ -14,7 +14,7 @@ public class ObjectEncrypt {
     Gson gson;
 
 
-    ObjectEncrypt(DES des) {
+    public ObjectEncrypt(DES des) {
         this.des = des;
         gson = new Gson();
     }
@@ -28,6 +28,10 @@ public class ObjectEncrypt {
             return "";
         }
         return new String(publicKey.encrypt(gson.toJson(message).getBytes()));
+    }
+
+    public DES getDes() {
+        return des;
     }
 
 }

@@ -1,6 +1,8 @@
 package server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import encrypt.ObjectDecrypt;
+import encrypt.ObjectEncrypt;
 import encrypt.des.DES;
 
 import java.io.IOException;
@@ -15,15 +17,19 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.out;
 
+/**
+ * @author zy
+ */
 public class Server {
 
     //port
     private static int port = 3456;
     public static final int THREAD_POOL_SIZE = 32;
     private static int userCount = 0;
-    private static ThreadPoolExecutor executor;
+    private ThreadPoolExecutor executor;
 
-    private DES des;
+    private ObjectDecrypt objectDecrypt;
+    private ObjectEncrypt objectEncrypt;
 
     //clients collection
     private static final List<Socket> CLIENTS = new ArrayList<>();
@@ -31,6 +37,7 @@ public class Server {
     public void start(int setPort) {
         port = setPort;
         initThreadPool();
+        initEncrypt();
         //start server
         try {
             ServerSocket server = new ServerSocket(port);
@@ -39,9 +46,10 @@ public class Server {
             while (true) {
                 Socket client = null;
                 client = server.accept();
-                out.println("客户端[" + (client != null ? client.getRemoteSocketAddress() : "null address") + "]连接成功，当前在线用户" + userCount + "个");
+                out.println("客户端[" + (client != null ? client.getRemoteSocketAddress() : "null address")
+                        + "]连接成功，当前在线用户" + userCount + "个");
                 // 将客户端添加到集合
-                userCount++;
+                ClientList.getClients().add(client);
                 // 每一个客户端开启一个线程处理消息
 
                 //接受publicKey
@@ -51,6 +59,12 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initEncrypt() {
+        DES des = new DES();
+        objectEncrypt = new ObjectEncrypt(des);
+        objectDecrypt = new ObjectDecrypt(des);
     }
 
     private void initThreadPool() {
@@ -64,20 +78,8 @@ public class Server {
                 new ThreadPoolExecutor.AbortPolicy());
     }
 
-    /**
-     * 消息处理线程，负责转发消息到聊天室里的人
-     */
-
-
-   /* public static void main(String[] args) throws ParseException {
-        Options options = new Options();
-        options.addOption("p", true, "listen port");
-        CommandLineParser commandLineParser = new DefaultParser();
-        CommandLine cmd = commandLineParser.parse(options, args);
-        if (cmd.hasOption('p')) {
-            port = Integer.parseInt(cmd.getOptionValue('p'));
-        }
-        new Server().start();
-    }*/
+    public static void main(String[] args) {
+        new Server().start(3456);
+    }
 
 }

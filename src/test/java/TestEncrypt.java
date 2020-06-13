@@ -3,10 +3,8 @@ import encrypt.rsa.PublicKey;
 import encrypt.rsa.RSA;
 import org.junit.Test;
 
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-
-import static utils.Utils.*;
+import static utils.Utils.binToUtf;
+import static utils.Utils.bytesToString;
 
 public class TestEncrypt {
     @Test
@@ -39,7 +37,7 @@ public class TestEncrypt {
 
         result = des.decrypt(result);
 
-        System.out.println(binToUTF(result));
+        System.out.println(binToUtf(result));
 
     }
 }

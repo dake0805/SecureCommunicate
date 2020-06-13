@@ -3,9 +3,6 @@ package utils;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 public class Utils {
     public static String bytesToString(byte[] bytes) {
@@ -17,7 +14,7 @@ public class Utils {
     }
 
 
-    public static String binToUTF(String bin) {
+    public static String binToUtf(String bin) {
         // Convert back to String
         byte[] ciphertextBytes = new byte[bin.length() / 8];
         String ciphertext = null;
