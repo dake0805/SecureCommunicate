@@ -161,6 +161,13 @@ public class DES {
         System.err.println(key);
     }
 
+    public DES(String key) {
+        // First index is garbage value, loops operating on this should start with index = 1
+        K = new long[17];
+        this.key = key;
+        System.err.println(key);
+    }
+
     private static String binToHex(String bin) {
 
         BigInteger b = new BigInteger(bin, 2);

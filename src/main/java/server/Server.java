@@ -8,8 +8,6 @@ import encrypt.des.DES;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -24,15 +22,13 @@ public class Server {
 
     //port
     private static int port = 3456;
+
+    //thread pool
     public static final int THREAD_POOL_SIZE = 32;
-    private static int userCount = 0;
     private ThreadPoolExecutor executor;
 
     private ObjectDecrypt objectDecrypt;
     private ObjectEncrypt objectEncrypt;
-
-    //clients collection
-    private static final List<Socket> CLIENTS = new ArrayList<>();
 
     public void start(int setPort) {
         port = setPort;
@@ -47,14 +43,14 @@ public class Server {
                 Socket client = null;
                 client = server.accept();
                 out.println("客户端[" + (client != null ? client.getRemoteSocketAddress() : "null address")
-                        + "]连接成功，当前在线用户" + userCount + "个");
+                        + "]连接成功，当前在线用户" + "userCount" + "个");
                 // 将客户端添加到集合
                 ClientList.getClients().add(client);
                 // 每一个客户端开启一个线程处理消息
 
                 //接受publicKey
 
-                executor.execute(new ServerListener(client, CLIENTS));
+                executor.execute(new ServerListener(client, objectEncrypt, objectDecrypt));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +58,8 @@ public class Server {
     }
 
     private void initEncrypt() {
-        DES des = new DES();
+        //TODO
+        DES des = new DES("1234");
         objectEncrypt = new ObjectEncrypt(des);
         objectDecrypt = new ObjectDecrypt(des);
     }

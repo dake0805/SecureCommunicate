@@ -1,65 +1,89 @@
 package server;
 
+import com.google.gson.Gson;
+import encrypt.ObjectDecrypt;
+import encrypt.ObjectEncrypt;
+import encrypt.des.DES;
+import encrypt.rsa.PublicKey;
 import message.Message;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
+import static java.lang.System.out;
+
 
 class ServerListener implements Runnable {
 
     private final Socket client;
-
-    private PrintWriter writer;
     private BufferedReader bufferedReader;
-    private static List<Socket> CLIENTS;
+    private PrintWriter currentClientWriter;
+    private ObjectEncrypt objectEncrypt;
+    private ObjectDecrypt objectDecrypt;
 
-    public ServerListener(Socket socket, List<Socket> clients) {
+
+    public ServerListener(Socket socket, ObjectEncrypt objectEncrypt, ObjectDecrypt objectDecrypt) {
         this.client = socket;
-        CLIENTS = clients;
+        this.objectDecrypt = objectDecrypt;
+        this.objectEncrypt = objectEncrypt;
     }
 
     @Override
     public void run() {
         try {
             initStream();
-            //sendMsg("[系统消息]：欢迎" + client.getRemoteSocketAddress() + "来到聊天室，当前共有" + CLIENTS.size() + "人在聊天");
+            initConnect();
             while (true) {
-                //sendMsg("[" + client.getRemoteSocketAddress() + "]：" + receiveMsg());
+                forwardData(receiveData());
             }
         } catch (IOException e) {
             // log
         }
     }
 
-    private void sendMsg(Message plainMessage) throws IOException {
-
+    private void initConnect() throws IOException {
+        while (true) {
+            //get public key
+            var msg = receiveData();
+            if (msg != null && msg.length() >= 1) {
+                PublicKey publicKey = new Gson().fromJson(msg, PublicKey.class);
+                //TODO
+                currentClientWriter.println(new String(publicKey.encrypt("1234".getBytes())));
+                currentClientWriter.flush();
+                break;
+            }
+        }
     }
 
+//    //发送明文消息
+//    private void sendMsg(Message plainMessage) throws IOException {
+//
+//    }
 
-    private void forwardMsg(String msg) throws IOException {
-        for (Socket socket : CLIENTS) {
-            if (socket == client) {
+
+    private void forwardData(String msg) throws IOException {
+        for (Socket socket : ClientList.getClients()) {
+            if (socket.equals(client)) {
                 continue;
             }
+            var writer = new PrintWriter(socket.getOutputStream());
             writer.println(msg);
-            // 这里需要特别注意，对方用readLine获取消息，就必须用print而不能用write，否则会导致消息获取不了
             writer.flush();
+            // 这里需要特别注意，对方用readLine获取消息，就必须用print而不能用write，否则会导致消息获取不了
         }
     }
 
 
-    private String receiveMsg() throws IOException {
+    private String receiveData() throws IOException {
         return bufferedReader.readLine();
     }
 
     private void initStream() throws IOException {
-        OutputStream outputStream = client.getOutputStream();
-        writer = new PrintWriter(outputStream);
         InputStream inputStream = client.getInputStream();
         InputStreamReader isr = new InputStreamReader(inputStream);
         bufferedReader = new BufferedReader(isr);
+        currentClientWriter = new PrintWriter(client.getOutputStream());
     }
 
 }

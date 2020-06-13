@@ -29,7 +29,7 @@ public class TestEncrypt {
 
     @Test
     public void testDES() {
-        DES des = new DES();
+        DES des = new DES("1234");
         String key = "123213213", message = "helloworld", result = null;
 
         result = des.encrypt(message);

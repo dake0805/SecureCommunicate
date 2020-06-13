@@ -1,5 +1,8 @@
 package client;
 
+import encrypt.ObjectDecrypt;
+import encrypt.ObjectEncrypt;
+import encrypt.des.DES;
 import encrypt.rsa.RSA;
 import utils.Utils;
 
@@ -8,6 +11,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
 
+import static java.lang.System.in;
 import static java.lang.System.out;
 
 /**
@@ -22,13 +26,13 @@ public class Client {
     private Scanner scanner;
 
     private String desKey;
+    private DES des;
 
 
     public void start(String host, int port) {
         try {
-            initStream();
-            // 连接服务器
             server = new Socket(host, port);
+            initStream();
             out.println("connected: " + server.getLocalSocketAddress());
             initConnect();
             new ReceiveMessageListener().start();
@@ -47,6 +51,7 @@ public class Client {
             var msg = receiveMsg();
             if (msg != null && msg.length() >= 1) {
                 desKey = new String(rsa.getPrivateKey().decrypt(msg.getBytes()));
+                des = new DES(desKey);
                 out.println("encrypted to server now.");
                 break;
             }
@@ -69,11 +74,15 @@ public class Client {
         @Override
         public void run() {
             try {
+                ObjectEncrypt objectEncrypt = new ObjectEncrypt(des);
                 while (true) {
-                    sendMsg(scanner.nextLine());
+                    var input = scanner.nextLine();
+                    if (input != null && input.length() > 0) {
+                        sendMsg(des.encrypt(objectEncrypt.des(input)));
+                    }
                 }
             } catch (SocketException e) {
-                out.println("服务器" + server.getRemoteSocketAddress() + "嗝屁了");
+                out.println("server error: " + server.getRemoteSocketAddress());
             } catch (IOException e) {
                 // log
             }
@@ -87,24 +96,21 @@ public class Client {
         @Override
         public void run() {
             try {
-                // 循环监听，除非掉线，或者服务器宕机了
+                ObjectDecrypt objectDecrypt = new ObjectDecrypt(des);
                 while (true) {
-                    out.println(receiveMsg());
+                    var receive = receiveMsg();
+                    if (receive != null && receive.length() > 0) {
+                        out.println(objectDecrypt.des(receive));
+                    }
                 }
             } catch (SocketException e) {
-                out.println("服务器" + server.getRemoteSocketAddress() + "嗝屁了");
+                out.println("server error" + server.getRemoteSocketAddress());
             } catch (IOException e) {
                 // log
             }
         }
     }
 
-    /**
-     * 发送消息
-     *
-     * @param msg 消息内容
-     * @throws IOException
-     */
     private void sendMsg(String msg) throws IOException {
         printWriter.println(msg);
         printWriter.flush();
