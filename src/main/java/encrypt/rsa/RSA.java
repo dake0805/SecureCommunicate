@@ -19,9 +19,9 @@ public class RSA {
         this.generateKey();
     }
 
-    public RSA(PublicKey publicKey) {
-        this.publicKey = publicKey;
-    }
+//    public RSA(PublicKey publicKey) {
+//        this.publicKey = publicKey;
+//    }
 
     private void generateKey() {
         Random r = new Random();
@@ -50,9 +50,9 @@ public class RSA {
 //        return publicKey.encrypt(message);
 //    }
 
-    public byte[] decrypt(byte[] message) {
-        return privateKey.decrypt(message);
-    }
+//    public byte[] decrypt(byte[] message) {
+//        return privateKey.decrypt(message);
+//    }
 
     public PublicKey getPublicKey() {
         return publicKey;
@@ -61,6 +61,4 @@ public class RSA {
     public PrivateKey getPrivateKey() {
         return privateKey;
     }
-
-
 }

@@ -154,7 +154,6 @@ public class DES {
     private long[] K;
 
     public DES() {
-
         // First index is garbage value, loops operating on this should start with index = 1
         K = new long[17];
         //todo bugs
@@ -227,7 +226,7 @@ public class DES {
         plaintext = utfToBin(plaintext);
 
         // Build the key schedule
-        buildKeySchedule(hash(key));
+        buildKeySchedule(key.hashCode());
 
         StringBuilder binPlaintext = new StringBuilder(plaintext);
 
@@ -281,7 +280,7 @@ public class DES {
     public String decrypt(String hexCipherText) {
 
         // Build the key schedule
-        buildKeySchedule(hash(key));
+        buildKeySchedule(key.hashCode());
 
         String binPlaintext = null;
 

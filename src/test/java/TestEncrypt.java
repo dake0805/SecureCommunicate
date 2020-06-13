@@ -24,7 +24,7 @@ public class TestEncrypt {
         System.out.println("encrypted data is: ");
         System.out.println(bytesToString(encrypted));
 
-        byte[] decrypted = rsa.decrypt(encrypted);
+        byte[] decrypted = rsa.getPrivateKey().decrypt(encrypted);
         System.out.println("Decrypting Bytes: " + bytesToString(decrypted));
         System.out.println("Decrypted String: " + new String(decrypted));
     }

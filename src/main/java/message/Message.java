@@ -1,9 +1,8 @@
 package message;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Message implements Serializable {
+public class Message {
     String account;
     String message;
 
