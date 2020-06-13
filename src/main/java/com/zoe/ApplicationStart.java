@@ -16,7 +16,7 @@ public class ApplicationStart {
         options.addOption("s", false, "start com.zoe.server");
         options.addOption("p", true, "com.zoe.server listen port");
         options.addOption("c", true, "start com.zoe.client to specific com.zoe.server");
-
+        options.addOption("encoding", true, "your terminal encoding");
         CommandLineParser commandLineParser = new DefaultParser();
         CommandLine cmd = null;
         try {
