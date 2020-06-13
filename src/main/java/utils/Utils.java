@@ -1,18 +1,29 @@
 package utils;
 
 import com.google.gson.Gson;
-import encrypt.ObjectEncrypt;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.UnsupportedEncodingException;
 
+
 public class Utils {
-    public static String bytesToString(byte[] bytes) {
-        StringBuilder str = new StringBuilder();
-        for (byte b : bytes) {
-            str.append(b);
-        }
-        return str.toString();
+//    public static String bytesToString(byte[] bytes) {
+//        StringBuilder str = new StringBuilder();
+//        for (byte b : bytes) {
+//            str.append(b);
+//        }
+//        return str.toString();
+//    }
+
+
+    public static byte[] base64String2Bytes(String base64Str) {
+        return Base64.decodeBase64(base64Str);
+    }
+
+    //byte[]转base64
+    public static String bytes2Base64String(byte[] b) {
+        return Base64.encodeBase64String(b);
     }
 
 

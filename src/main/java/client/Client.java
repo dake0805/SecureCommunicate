@@ -50,7 +50,7 @@ public class Client {
         while (true) {
             var msg = receiveMsg();
             if (msg != null && msg.length() >= 1) {
-                desKey = new String(rsa.getPrivateKey().decrypt(msg.getBytes()));
+                desKey = new String(rsa.getPrivateKey().decrypt(Utils.base64String2Bytes(msg)));
                 des = new DES(desKey);
                 out.println("encrypted to server now.");
                 break;

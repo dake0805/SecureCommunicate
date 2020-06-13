@@ -6,6 +6,7 @@ import encrypt.ObjectEncrypt;
 import encrypt.des.DES;
 import encrypt.rsa.PublicKey;
 import message.Message;
+import utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
@@ -48,8 +49,9 @@ class ServerListener implements Runnable {
             var msg = receiveData();
             if (msg != null && msg.length() >= 1) {
                 PublicKey publicKey = new Gson().fromJson(msg, PublicKey.class);
+                var deskey = Utils.bytes2Base64String(publicKey.encrypt("1234".getBytes()));
                 //TODO
-                currentClientWriter.println(new String(publicKey.encrypt("1234".getBytes())));
+                currentClientWriter.println(deskey);
                 currentClientWriter.flush();
                 break;
             }

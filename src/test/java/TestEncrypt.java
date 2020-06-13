@@ -1,14 +1,14 @@
+import com.google.gson.Gson;
 import encrypt.des.DES;
 import encrypt.rsa.PublicKey;
 import encrypt.rsa.RSA;
 import org.junit.Test;
 
-import static utils.Utils.binToUtf;
-import static utils.Utils.bytesToString;
+import static utils.Utils.*;
 
 public class TestEncrypt {
-    @Test
-    public void testRSA() {
+   /*   @Test
+  public void testRSA() {
         RSA rsa = new RSA();
         String testStr = "hello world, this is rsa test string";
         System.out.println("Encrypting String: " + testStr);
@@ -25,6 +25,20 @@ public class TestEncrypt {
         byte[] decrypted = rsa.getPrivateKey().decrypt(encrypted);
         System.out.println("Decrypting Bytes: " + bytesToString(decrypted));
         System.out.println("Decrypted String: " + new String(decrypted));
+    }*/
+
+    @Test
+    public void rsa2() {
+        RSA rsa = new RSA();
+        var encrypted = bytes2Base64String(rsa.getPublicKey().encrypt("1234".getBytes()));
+        var decrypted = new String( rsa.getPrivateKey().decrypt(base64String2Bytes(encrypted)));
+        System.out.println(encrypted);
+        System.out.println(decrypted);
+    }
+
+    @Test
+    public void gson() {
+        System.out.println(new Gson().toJson("1234"));
     }
 
     @Test
