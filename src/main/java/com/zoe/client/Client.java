@@ -1,9 +1,8 @@
 package com.zoe.client;
 
-import com.zoe.message.MessageDecrypt;
-import com.zoe.message.MessageEncrypt;
+import com.zoe.client.message.*;
 import com.zoe.encrypt.rsa.RSA;
-import com.zoe.message.Message;
+import com.zoe.client.message.impl.AesMessageEncryptDecrypt;
 import com.zoe.utils.Utils;
 
 import java.io.*;
@@ -24,11 +23,9 @@ public class Client {
     private BufferedReader bufferedReader;
     private Scanner scanner;
 
-    private String key;
-
     private String account = "user";
 
-    private static final String MODE = "aes";
+    MessageEncryptDecrypt messageEncryptDecrypt;
 
     public void start(String host, int port) {
         try {
@@ -54,8 +51,8 @@ public class Client {
         while (true) {
             var msg = receiveMsg();
             if (msg != null && msg.length() >= 1) {
-                key = new String(rsa.getPrivateKey().decrypt(Utils.base64String2Bytes(msg)));
-                //des = new DES(key);
+                String key = new String(rsa.getPrivateKey().decrypt(Utils.base64String2Bytes(msg)));
+                messageEncryptDecrypt = new AesMessageEncryptDecrypt(key);
                 out.println("encrypted to com.zoe.server now.");
                 break;
             }
@@ -77,11 +74,10 @@ public class Client {
     class SendMessageListener extends Thread {
         @Override
         public void run() {
-            MessageEncrypt messageEncrypt = new MessageEncrypt().mode(MODE, key);
             while (true) {
                 var input = scanner.nextLine();
                 if (input != null && input.length() > 0) {
-                    sendMsg(messageEncrypt.encrypt(new Message(account, input)));
+                    sendMsg(messageEncryptDecrypt.encrypt(new Message(account, input)));
                 }
             }
         }
@@ -94,16 +90,15 @@ public class Client {
         @Override
         public void run() {
             try {
-                MessageDecrypt messageDecrypt = new MessageDecrypt().mode(MODE, key);
                 while (true) {
                     var receive = receiveMsg();
                     if (receive != null && receive.length() > 0) {
-                        Message decrypted = messageDecrypt.decrypt(receive);
+                        Message decrypted = messageEncryptDecrypt.decrypt(receive);
                         out.println(decrypted.toString());
                     }
                 }
             } catch (SocketException e) {
-                out.println("com.zoe.server error" + server.getRemoteSocketAddress());
+                out.println("server error" + server.getRemoteSocketAddress());
             } catch (IOException e) {
                 // log
             }

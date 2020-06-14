@@ -222,7 +222,7 @@ public class DES {
     }
 
     /**
-     * Encrypt a string com.zoe.message with the DES block cipher
+     * Encrypt a string com.zoe.client.message with the DES block cipher
      *
      * @param key
      * @param plaintext
@@ -278,11 +278,11 @@ public class DES {
     }
 
     /**
-     * Decrypt a string com.zoe.message with the DES block cipher
+     * Decrypt a string com.zoe.client.message with the DES block cipher
      *
      * @param key           : String - the key to decrypt with
      * @param hexCipherText : String - Hex string to decrypt
-     * @return Plaintext com.zoe.message string
+     * @return Plaintext com.zoe.client.message string
      */
     public String decrypt(String hexCipherText) {
 
@@ -505,7 +505,7 @@ public class DES {
     /**
      * Feistel function in DES algorithm specified in FIPS Pub 46
      *
-     * @param mi  : String - 32-bit com.zoe.message binary string
+     * @param mi  : String - 32-bit com.zoe.client.message binary string
      * @param key : String - 48-bit key binary string
      * @return 32-bit output string
      */
@@ -520,7 +520,7 @@ public class DES {
         long m = Long.parseLong(gMi, 2);
         long k = Long.parseLong(key, 2);
 
-        // XOR expanded com.zoe.message block and key block (48 bits)
+        // XOR expanded com.zoe.client.message block and key block (48 bits)
         Long result = m ^ k;
 
         String bin = Long.toBinaryString(result);

@@ -1,9 +1,8 @@
 package com.zoe.server;
 
 import com.google.gson.Gson;
-import com.zoe.message.MessageDecrypt;
-import com.zoe.message.MessageEncrypt;
 import com.zoe.encrypt.rsa.PublicKey;
+import com.zoe.client.message.MessageEncryptDecrypt;
 import com.zoe.utils.Utils;
 
 import java.io.*;
@@ -15,14 +14,12 @@ class ServerListener implements Runnable {
     private final Socket client;
     private BufferedReader bufferedReader;
     private PrintWriter currentClientWriter;
-    private MessageEncrypt messageEncrypt;
-    private MessageDecrypt messageDecrypt;
+    private final MessageEncryptDecrypt messageEncryptDecrypt;
 
 
-    public ServerListener(Socket socket, MessageEncrypt messageEncrypt, MessageDecrypt messageDecrypt) {
+    public ServerListener(Socket socket, MessageEncryptDecrypt messageEncryptDecrypt) {
         this.client = socket;
-        this.messageDecrypt = messageDecrypt;
-        this.messageEncrypt = messageEncrypt;
+        this.messageEncryptDecrypt = messageEncryptDecrypt;
     }
 
     @Override
@@ -44,7 +41,7 @@ class ServerListener implements Runnable {
             var msg = receiveData();
             if (msg != null && msg.length() >= 1) {
                 PublicKey publicKey = new Gson().fromJson(msg, PublicKey.class);
-                var deskey = Utils.bytes2Base64String(publicKey.encrypt(messageEncrypt.getKey().getBytes()));
+                var deskey = Utils.bytes2Base64String(publicKey.encrypt(messageEncryptDecrypt.getKey().getBytes()));
                 //TODO
                 currentClientWriter.println(deskey);
                 currentClientWriter.flush();

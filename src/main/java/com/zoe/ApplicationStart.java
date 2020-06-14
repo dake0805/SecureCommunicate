@@ -4,12 +4,15 @@ import com.zoe.client.Client;
 import org.apache.commons.cli.*;
 import com.zoe.server.Server;
 
+import java.nio.charset.Charset;
+
 /**
  * @author zy
  */
 public class ApplicationStart {
     public static void main(String[] args) {
         System.out.println(System.getProperty("file.encoding"));
+        System.out.println(Charset.defaultCharset());
         int port = 3456;
         Options options = new Options();
         options.addOption("h", true, "listen port");

@@ -45,12 +45,12 @@ public class RSA {
 //        }
 //    }
 
-//    public byte[] com.zoe.encrypt(byte[] com.zoe.message) {
-//        return publicKey.com.zoe.encrypt(com.zoe.message);
+//    public byte[] com.zoe.encrypt(byte[] com.zoe.client.message) {
+//        return publicKey.com.zoe.encrypt(com.zoe.client.message);
 //    }
 
-//    public byte[] decrypt(byte[] com.zoe.message) {
-//        return privateKey.decrypt(com.zoe.message);
+//    public byte[] decrypt(byte[] com.zoe.client.message) {
+//        return privateKey.decrypt(com.zoe.client.message);
 //    }
 
     public PublicKey getPublicKey() {

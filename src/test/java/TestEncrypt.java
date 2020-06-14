@@ -1,9 +1,9 @@
 //import com.google.gson.Gson;
-//import com.zoe.message.MessageDecrypt;
-//import com.zoe.message.MessageEncrypt;
+//import com.zoe.client.message.MessageDecrypt;
+//import com.zoe.client.message.MessageEncrypt;
 //import com.zoe.encrypt.des.DES;
 //import com.zoe.encrypt.rsa.RSA;
-//import com.zoe.message.Message;
+//import com.zoe.client.message.Message;
 //import org.junit.Test;
 //
 //import static com.zoe.utils.Utils.*;
@@ -49,9 +49,9 @@
 //    @Test
 //    public void testDES() {
 //        DES des = new DES("1234");
-//        String key = "123213213", com.zoe.message = "helloworld", result = null;
+//        String key = "123213213", com.zoe.client.message = "helloworld", result = null;
 //
-//        result = des.com.zoe.encrypt(com.zoe.message);
+//        result = des.com.zoe.encrypt(com.zoe.client.message);
 //        System.out.println(result);
 //
 //        result = des.decrypt(result);

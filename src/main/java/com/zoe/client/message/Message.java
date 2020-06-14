@@ -1,4 +1,4 @@
-package com.zoe.message;
+package com.zoe.client.message;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

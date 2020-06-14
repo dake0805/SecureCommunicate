@@ -1,6 +1,8 @@
-package com.zoe.message;
+package com.zoe.client.message.impl;
 
-import com.google.gson.Gson;
+import com.zoe.client.message.Message;
+import com.zoe.client.message.MessageEncryptDecrypt;
+import com.zoe.utils.Utils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,42 +17,15 @@ import static com.zoe.utils.Utils.bytes2Base64String;
 /**
  * @author zy
  */
-public class MessageEncrypt {
-    mode mode = com.zoe.message.mode.des;
-    private String key;
-    Gson gson;
+public class AesMessageEncryptDecrypt implements MessageEncryptDecrypt {
+    private final String key;
 
-
-    public MessageEncrypt() {
-        gson = new Gson();
-        key = "";
-    }
-
-    public MessageEncrypt mode(String mode, String key) {
-        if ("aes".equals(mode)) {
-            this.mode = com.zoe.message.mode.aes;
-        }
-        if ("des".equals(mode)) {
-            this.mode = com.zoe.message.mode.des;
-        }
+    public AesMessageEncryptDecrypt(String key) {
         this.key = key;
-        return this;
     }
 
+    @Override
     public String encrypt(Message message) {
-        switch (mode) {
-            case aes:
-                return aes(message);
-            case des:
-                break;
-            default:
-                break;
-        }
-        return "";
-    }
-
-
-    private String aes(Message message) {
         try {
             SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -64,8 +39,22 @@ public class MessageEncrypt {
         return "";
     }
 
+    @Override
+    public Message decrypt(String encrypted) {
+        try {
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+            byte[] result = cipher.doFinal(Utils.base64String2Bytes(encrypted));
+            return gson.fromJson(new String(result), Message.class);
+        } catch (Exception e) {
+            //
+        }
+        return null;
+    }
+
+    @Override
     public String getKey() {
-        return this.key;
+        return key;
     }
 }
-
