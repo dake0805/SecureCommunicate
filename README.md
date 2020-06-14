@@ -1,12 +1,29 @@
 # SecureCommunicate
 网路与信息安全 大作业2
 
+多人聊天室，加密通信。
+
 实现两个主机之间的密钥分发和加密传输。
 要求：
+
 1. 用RSA算法实现两个主机之间的密钥分发；
 2. 用分发的密钥和DES加密，实现两个主机之间的加密数据传输；
 3. 两个步骤在程序中自动执行完，无手动参与；
 4. 实现代码，并写出实现技术文档。
+
+# User Interface
+
+已有GUI，基于Java Swing。
+
+很随意。
+
+详见
+
+release: https://github.com/dake0805/SecureCommunicate/releases/tag/gui-0.1
+
+source code: https://github.com/dake0805/SecureCommunicate/tree/gui
+
+![image-20200614173518907](pic/image-20200614173518907.png)
 
 # Features
 需要开启一个服务端，所有的客户端连接到此服务端，就能互相发送消息。
