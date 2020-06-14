@@ -2,48 +2,73 @@ package com.zoe.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainWindow extends JFrame {
+    private JTextArea userInfoMsgText;
     private JTextArea recordOfMsgText;
     private JTextArea sendMsgText;
-    private JButton send;
+    private JButton sendButton;
 
-    public MainWindow() {
-        this.setTitle("QiChatV04");
-        //最重要的！名字
-        this.setLayout(new FlowLayout());
-        this.setSize(600, 550);
+    private String serverAddress;
+    private int port;
+    private String account;
+
+    public MainWindow(String serverAddress, int port, String account) {
+        this.serverAddress = serverAddress;
+        this.port = port;
+        this.account = account;
+        this.setTitle("chat room@" + serverAddress);
+        this.setLayout(new BorderLayout());
+        this.setBounds(100, 100, 450, 300);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        recordOfMsgText = new JTextArea(20, 50);
-        //文本域 存放历史消息
-        recordOfMsgText.setLineWrap(true);
-        recordOfMsgText.setEditable(false);
-        //改为不可编辑的
 
-        sendMsgText = new JTextArea(3, 30);
-        //消息发送框
-        sendMsgText.setLineWrap(true);
+        welcomeTextBox();
+        sendButton();
+        recordMessageBox();
+        inputMessageBox();
 
-        send = new JButton("send");
-        //发送按钮
-        send.setPreferredSize(new Dimension(100, 50));
-        this.add(recordOfMsgText);
-        this.add(sendMsgText);
-        this.add(send);
+        this.add(userInfoMsgText, "North");
+        this.add(recordOfMsgText, "Center");
+        this.add(sendButton, "East");
+        this.add(sendMsgText, "South");
         this.setVisible(true);
 
-        send.addActionListener(new ButtonAction());
     }
 
-    public JTextArea getSendMsgText() {
-        return sendMsgText;
+    private void welcomeTextBox() {
+        userInfoMsgText = new JTextArea();
+        userInfoMsgText.setLineWrap(true);
+        userInfoMsgText.setEditable(false);
+        userInfoMsgText.setText("welcome to chat room@" + serverAddress + ":" + port + ", your username is " + account);
+
     }
 
-    public JButton getSend() {
-        return send;
+    private void recordMessageBox() {
+        recordOfMsgText = new JTextArea();
+        recordOfMsgText.setLineWrap(true);
+        recordOfMsgText.setEditable(false);
     }
 
-    public JTextArea getRecordOfMsgText() {
-        return recordOfMsgText;
+    private void inputMessageBox() {
+        sendMsgText = new JTextArea();
+        sendMsgText.setLineWrap(true);
+        sendMsgText.setEditable(true);
     }
+
+
+    private void sendButton() {
+        sendButton = new JButton("send");
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String message = sendMsgText.getText().trim();
+                if (message.length() > 0) {
+                    //TODO
+                }
+            }
+        });
+    }
+
 }

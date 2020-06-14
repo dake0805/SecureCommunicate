@@ -1,13 +1,15 @@
 package com.zoe.gui;
 
 import javax.swing.*;
-import java.text.ParseException;
 
+/**
+ * @author zy
+ */
 public class GuiStart {
     public static void main(String[] args) {
-        String serverAddress;
-        int serverPort;
-        String account;
+        String serverAddress = "localhost";
+        int serverPort = 8080;
+        String account = "user";
 
         JTextField serverAddressTextBox = new JTextField(9);
         JTextField serverPortTextBox = new JTextField(5);
@@ -35,9 +37,7 @@ public class GuiStart {
             }
 
         }
-
-        JFrame frame = new MainWindow();
-        frame.setVisible(true);
+        JFrame frame = new MainWindow(serverAddress, serverPort, account);
     }
 
 }
