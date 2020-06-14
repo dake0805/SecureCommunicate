@@ -28,18 +28,30 @@ public class Client {
 
     MessageEncryptDecrypt messageEncryptDecrypt;
 
-    public void startWithGui(String host, int port, String account) {
+    public boolean startWithGui(String host, int port, String account) {
         try {
             this.account = account;
             server = new Socket(host, port);
             initStream();
             initConnect();
-            new ReceiveMessageListener().start();
-            new SendMessageListener().start();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
+
+    public void sendMessageWithGui(String string) {
+        if (string != null && string.length() > 0) {
+            sendMessage(new Message(account, string));
+        }
+    }
+
+
+    public Message receiveMessageWithGui() throws IOException {
+        return receiveMsg();
+    }
+
 
     public void start(String host, int port) {
         try {

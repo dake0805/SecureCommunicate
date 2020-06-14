@@ -1,9 +1,12 @@
 package com.zoe.gui;
 
+import com.zoe.client.Client;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class MainWindow extends JFrame {
     private JTextArea userInfoMsgText;
@@ -15,26 +18,33 @@ public class MainWindow extends JFrame {
     private int port;
     private String account;
 
+    private final Client client;
+
     public MainWindow(String serverAddress, int port, String account) {
-        this.serverAddress = serverAddress;
-        this.port = port;
-        this.account = account;
-        this.setTitle("chat room@" + serverAddress);
-        this.setLayout(new BorderLayout());
-        this.setBounds(100, 100, 450, 300);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        client = new Client();
+        if (client.startWithGui(serverAddress, port, account)) {
+            this.serverAddress = serverAddress;
+            this.port = port;
+            this.account = account;
+            this.setTitle("chat room@" + serverAddress);
+            this.setLayout(new BorderLayout());
+            this.setBounds(100, 100, 450, 300);
+            this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        welcomeTextBox();
-        sendButton();
-        recordMessageBox();
-        inputMessageBox();
+            welcomeTextBox();
+            sendButton();
+            recordMessageBox();
+            inputMessageBox();
 
-        this.add(userInfoMsgText, "North");
-        this.add(recordOfMsgText, "Center");
-        this.add(sendButton, "East");
-        this.add(sendMsgText, "South");
-        this.setVisible(true);
-
+            this.add(userInfoMsgText, "North");
+            this.add(recordOfMsgText, "Center");
+            this.add(sendButton, "East");
+            this.add(sendMsgText, "South");
+            this.setVisible(true);
+            new Receive().start();
+        } else {
+            //alert
+        }
     }
 
     private void welcomeTextBox() {
@@ -63,12 +73,29 @@ public class MainWindow extends JFrame {
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String message = sendMsgText.getText().trim();
+                String message = sendMsgText.getText();
                 if (message.length() > 0) {
-                    //TODO
+                    client.sendMessageWithGui(message);
+                    sendMsgText.setText("");
                 }
             }
         });
+    }
+
+    private class Receive extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+
+                    Thread.sleep(1);
+                    var s = client.receiveMessageWithGui();
+                    recordOfMsgText.append(s.toString());
+                } catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }
