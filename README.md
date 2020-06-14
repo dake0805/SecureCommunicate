@@ -26,6 +26,8 @@ client:
 
 > java -jar SecureConnect-homework2-1.0-SNAPSHOT-jar-with-dependencies.jar -c your server -p your port
 
+已开启服务端 112.74.126.191:3456 用于测试
+
 # 存在的问题
 
 - DES加密不可用
