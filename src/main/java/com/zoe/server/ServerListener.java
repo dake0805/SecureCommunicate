@@ -57,7 +57,7 @@ class ServerListener implements Runnable {
 
 
     private void forwardData(String msg) throws IOException {
-        for (Socket socket : ClientList.getClients()) {
+        for (Socket socket : ClientsList.getClients()) {
 //            if (socket.equals(com.zoe.client)) {
 //                continue;
 //            }

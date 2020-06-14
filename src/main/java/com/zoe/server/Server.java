@@ -44,7 +44,7 @@ public class Server {
                 out.println("客户端[" + (client != null ? client.getRemoteSocketAddress() : "null address")
                         + "]连接成功，当前在线用户" + "userCount" + "个");
                 // 将客户端添加到集合
-                ClientList.getClients().add(client);
+                ClientsList.getClients().add(client);
                 // 每一个客户端开启一个线程处理消息
 
                 //接受publicKey
