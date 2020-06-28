@@ -2,7 +2,7 @@ package com.zoe.client;
 
 import com.zoe.client.message.Message;
 import com.zoe.client.message.MessageEncryptDecrypt;
-import com.zoe.client.message.impl.AesMessageEncryptDecrypt;
+import com.zoe.client.message.MessageEncryptDecryptBuilder;
 import com.zoe.encrypt.rsa.RSA;
 import com.zoe.utils.Utils;
 
@@ -79,7 +79,7 @@ public class Client {
             var encryptedKey = bufferedReader.readLine();
             if (encryptedKey != null && encryptedKey.length() >= 1) {
                 String key = new String(rsa.getPrivateKey().decrypt(Utils.base64String2Bytes(encryptedKey)));
-                messageEncryptDecrypt = new AesMessageEncryptDecrypt(key);
+                messageEncryptDecrypt = new MessageEncryptDecryptBuilder(key).build();
                 out.println("encrypted to com.zoe.server now.");
                 break;
             }

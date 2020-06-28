@@ -1,8 +1,8 @@
 package com.zoe.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.zoe.client.message.impl.AesMessageEncryptDecrypt;
 import com.zoe.client.message.MessageEncryptDecrypt;
+import com.zoe.client.message.MessageEncryptDecryptBuilder;
 import com.zoe.utils.Utils;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class Server {
     }
 
     private void initEncrypt() {
-        messageEncryptDecrypt = new AesMessageEncryptDecrypt(Utils.generateDesKey(16));
+        messageEncryptDecrypt = new MessageEncryptDecryptBuilder(Utils.generateDesKey(16)).build();
     }
 
     private void initThreadPool() {
@@ -70,9 +70,4 @@ public class Server {
                 namedThreadFactory,
                 new ThreadPoolExecutor.AbortPolicy());
     }
-
-//    public static void main(String[] args) {
-//        new Server().start(3456);
-//    }
-
 }
