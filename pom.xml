@@ -68,7 +68,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.zoe.ApplicationStart</mainClass>
+                            <mainClass>com.zoe.gui.GuiStart</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -50,11 +50,6 @@ class ServerListener implements Runnable {
         }
     }
 
-//    //发送明文消息
-//    private void sendMsg(Message plainMessage) throws IOException {
-//
-//    }
-
 
     private void forwardData(String msg) throws IOException {
         for (Socket socket : ClientsList.getClients()) {
